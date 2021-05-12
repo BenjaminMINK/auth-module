@@ -199,6 +199,11 @@ export class LocalScheme<
   }
 
   fetchUser(endpoint?: HTTPRequest): Promise<HTTPResponse | void> {
+    // FIXME: crappy crap fix for dynamic env url
+    if (typeof this.options.endpoints.user === 'object' && this.options.endpoints.user.url.startsWith('/')) {
+      this.options.endpoints.user.url = this.options.endpoints.user.url.replace('/oauth2', this.$auth.ctx.$config.auth.baseURL)
+    }
+
     // Token is required but not available
     if (!this.check().valid) {
       return Promise.resolve()
